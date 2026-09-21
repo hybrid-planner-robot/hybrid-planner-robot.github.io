@@ -128,12 +128,15 @@
     <div class="authors">Anonymous Submission - ICRA 2027</div>
 
     <div class="links-container">
-        <a href="#" class="repo-link">[Code Repository - Coming Soon]</a>
+        <a href="#" class="repo-link">https://github.com/hybrid-planner-robot/hybrid-planner-robot.code</a>
     </div>
     
     <div class="abstract">
         <h2>Abstract</h2>
-        <p>Natural-language robot manipulation requires converting user instructions and visual observations into plans that are semantically meaningful and executable...</p>
+        <p>Natural-language robot manipulation requires converting user instructions and visual observations into plans that are semantically meaningful and executable. Direct foundation-model planning is flexible but difficult to verify, while symbolic planning provides explicit action semantics but requires manually engineered domains.  We propose a fully local framework that bridges these approaches, 
+assuming the availability of general-purpose, reusable PDDL domains.  
+Given the natural-language task, the framework selects a reusable domain, identifies missing symbolic knowledge, and introduces symbolic extensions constrained to available robot skills.  
+ A grounded planning problem is then constructed and solved by a standard PDDL planner. During execution, a Vision-Language Model (VLM) selects controller-specific parameters without modifying the symbolic action semantics. We evaluate the framework in simulated and real-world manipulation scenarios, comparing it with alternative baselines and across language models of different sizes.</p>
     </div>
 
     <h2>Supplementary Video</h2>
