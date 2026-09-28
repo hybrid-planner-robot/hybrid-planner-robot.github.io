@@ -259,6 +259,11 @@
         thead.appendChild(head);
         table.appendChild(thead);
         const body = document.createElement("tbody");
+        function withPct(v, base) {
+            const pct = Math.round((1000 * v) / base) / 10;
+            const shown = Number.isInteger(pct) ? String(pct) : pct.toFixed(1);
+            return v + " (" + shown + "%)";
+        }
         function addRow(label, nExp, nImp, values, total) {
             const tr = document.createElement("tr");
             if (total) tr.className = "total";
@@ -267,33 +272,34 @@
             tr.appendChild(td(nImp === "" ? "" : String(nImp)));
             values.forEach((v, i) => {
                 const base = i % 2 === 0 ? nExp : nImp;
-                let text = v === "" ? "" : String(v);
-                if (v !== "" && base !== "" && base) {
-                    const pct = Math.round((1000 * v) / base) / 10;
-                    const shown = Number.isInteger(pct) ? String(pct) : pct.toFixed(1);
-                    text = v + " (" + shown + "%)";
-                }
+                const text = v === "" || base === "" || !base ? (v === "" ? "" : String(v)) : withPct(v, base);
                 tr.appendChild(td(text, i >= 4 ? "ours" : ""));
             });
             body.appendChild(tr);
         }
-        const shown = [];
+        function addBothPhrasings(label, nEach, values) {
+            const tr = document.createElement("tr");
+            tr.className = "total";
+            tr.appendChild(td(label));
+            const nCell = td(String(nEach * 2));
+            nCell.colSpan = 2;
+            tr.appendChild(nCell);
+            for (let i = 0; i < ARMS.length; i++) {
+                const cell = td(withPct(values[i * 2] + values[i * 2 + 1], nEach * 2), i >= 2 ? "ours" : "");
+                cell.colSpan = 2;
+                cell.style.textAlign = "center";
+                tr.appendChild(cell);
+            }
+            body.appendChild(tr);
+        }
         PAPER.forEach(([label, n, match], idx) => {
             const values = ARMS.flatMap((arm) => ["explicit", "implicit"].map((phr) => paperCount(model, arm, match, phr)));
-            if (idx === 2) {
-                const base = shown[0];
-                const ext = shown[1];
-                addRow("Base domain + extension", 28, 28, base.map((v, i) => v + ext[i]), true);
-                const combined = [];
-                for (let i = 0; i < ARMS.length; i++) combined.push(base[i * 2] + base[i * 2 + 1] + ext[i * 2] + ext[i * 2 + 1], "");
-                addRow("Combined, both phrasings", 56, "", combined, true);
-            }
             addRow(label, n, n, values, false);
-            shown.push(values);
+            if (idx < 2) addBothPhrasings(label + ", both phrasings", n, values);
         });
         table.appendChild(body);
         const cap = document.createElement("caption");
-        cap.textContent = "Correct outcomes, with the percentage of n in parentheses. n stays a count.";
+        cap.textContent = "Correct outcomes, with the percentage of n in parentheses. n stays a count. Each aggregate row sums explicit and implicit.";
         table.appendChild(cap);
         wrap.appendChild(table);
         summaries.appendChild(wrap);
