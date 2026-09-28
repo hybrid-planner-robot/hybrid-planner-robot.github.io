@@ -265,7 +265,16 @@
             tr.appendChild(td(label));
             tr.appendChild(td(nExp === "" ? "" : String(nExp)));
             tr.appendChild(td(nImp === "" ? "" : String(nImp)));
-            values.forEach((v, i) => tr.appendChild(td(String(v), i >= 4 ? "ours" : "")));
+            values.forEach((v, i) => {
+                const base = i % 2 === 0 ? nExp : nImp;
+                let text = v === "" ? "" : String(v);
+                if (v !== "" && base !== "" && base) {
+                    const pct = Math.round((1000 * v) / base) / 10;
+                    const shown = Number.isInteger(pct) ? String(pct) : pct.toFixed(1);
+                    text = v + " (" + shown + "%)";
+                }
+                tr.appendChild(td(text, i >= 4 ? "ours" : ""));
+            });
             body.appendChild(tr);
         }
         const shown = [];
@@ -284,7 +293,7 @@
         });
         table.appendChild(body);
         const cap = document.createElement("caption");
-        cap.textContent = "Counts of correct outcomes. n is the number of instructions for one method and one phrasing.";
+        cap.textContent = "Correct outcomes, with the percentage of n in parentheses. n stays a count.";
         table.appendChild(cap);
         wrap.appendChild(table);
         summaries.appendChild(wrap);
