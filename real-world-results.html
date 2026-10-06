@@ -3,60 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-World Results - Vision-Language Guided Domain Selection</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --bg-color: #f8f9fa;
-        }
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px 40px;
-        }
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px 0;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 30px;
-        }
-        nav a {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: bold;
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        nav a:hover, nav a.active {
-            background-color: #eee;
-            color: var(--accent-color);
-        }
-        h1, h2 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-top: 20px;
-        }
-    </style>
+    <meta name="description" content="Real-world robot manipulation results for the vision-language guided planning framework.">
+    <title>Real-World Results · Vision-Language Guided Planning</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="results-page real-results-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+        <nav aria-label="Primary navigation">
+            <a class="brand" href="index.html" aria-label="Paper project page home"><span class="brand-mark">VL</span>Paper project page</a>
+            <div class="nav-links">
+                <a href="index.html">Overview</a>
+                <a href="simulation-results.html">Simulation</a>
+                <a href="real-world-results.html" class="active" aria-current="page">Real world</a>
+            </div>
+        </nav>
+    </header>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="simulation-results.html">Simulation Results</a>
-        <a href="real-world-results.html" class="active">Real-World Results</a>
-    </nav>
+    <main id="main-content" class="page-shell">
+        <header class="page-intro">
+            <h1>Real-world results</h1>
+            <p class="lede">Thirty trials evaluate whether the proposed system can turn natural-language instructions into plans and execute those plans with a physical robot.</p>
+        </header>
 
-    <h1>Real-World Results</h1>
+        <section class="real-summary" aria-labelledby="summary-heading">
+            <div class="summary-copy">
+                <h2 id="summary-heading">Results summary</h2>
+                <p>The proposed planning method produced a valid symbolic plan in 25 of 30 trials. Of those 25 executable trials, the robot completed 23 successfully. A video of each successful execution is available in the detailed results. The LLM-Plan baseline did not produce executable plans (look at action missing). </p>
+                <!-- <p class="result-note"><strong>How to read the table:</strong> “Planning result” reports whether a valid symbolic plan was generated. “Execution” reports whether the physical robot completed it. A dash (–) means that no robot execution was attempted because planning failed.</p> -->
+            </div>
+            <div class="summary-stats" aria-label="Summary statistics">
+                <div class="summary-stat"><strong>25 / 30</strong><span>Planning successes</span><small>83.3%</small></div>
+                <div class="summary-stat"><strong>23 / 25</strong><span>Execution successes</span><small>92.0% of executable trials</small></div>
+                <div class="summary-stat"><strong>23† / 30</strong><span>LLM-plan generated plans</span><small>Includes partial successes</small></div>
+            </div>
+        </section>
 
-    <!-- Struttura predisposta per quando inserirai i dati -->
+        <section class="section" aria-labelledby="gallery-heading">
+            <h2 id="gallery-heading">Example tasks</h2>
+            <p class="section-intro">The images show the initial robot workspace for four representative trials.</p>
+            <div class="experiment-gallery">
+                <figure class="experiment-figure">
+                    <figcaption><strong>Place grape bunches on the plate</strong><span>Task 14</span></figcaption>
+                    <div class="before-after"><div><span>Before</span><img src="assets/real-world/grapes-before.png" alt="Four grape bunches arranged beside an empty plate before the task"></div></div>
+                </figure>
+                <figure class="experiment-figure">
+                    <figcaption><strong>Put cleaning items in the box</strong><span>Task 18</span></figcaption>
+                    <div class="before-after"><div><span>Before</span><img src="assets/real-world/cleaning-before.png" alt="Two sponges and a cleaning cloth beside an empty plastic box before the task" loading="lazy"></div></div>
+                </figure>
+                <figure class="experiment-figure">
+                    <figcaption><strong>Pour water into a cup</strong><span>Task 23</span></figcaption>
+                    <div class="before-after"><div><span>Before</span><img src="assets/real-world/pouring-before.png" alt="Bottle and paper cup in the robot workspace before pouring" loading="lazy"></div></div>
+                </figure>
+                <figure class="experiment-figure">
+                    <figcaption><strong>Reverse the red pen</strong><span>Task 29</span></figcaption>
+                    <div class="before-after"><div><span>Before</span><img src="assets/real-world/orientation-before.png" alt="Red pen in its initial orientation with other writing tools" loading="lazy"></div></div>
+                </figure>
+            </div>
+        </section>
 
+        <section class="section trial-results" aria-labelledby="trials-heading">
+            <h2 id="trials-heading">All trials</h2>
+            <!-- <p class="section-intro">Open either plan column to inspect the generated action sequence. The proposed method also exposes the complete PDDL problem used by the symbolic planner.</p> -->
+            <div class="trial-controls">
+                <label for="real-filter">Show</label>
+                <select id="real-filter">
+                    <option value="all">All 30 trials</option>
+                    <option value="planning-failed">Planning failures</option>
+                    <option value="execution-failed">Execution failures</option>
+                    <option value="llm-failed">LLM plan failures</option>
+                </select>
+                <label class="search-label" for="real-search">Search tasks</label>
+                <input id="real-search" type="search" placeholder="e.g. water, blocks, pen">
+            </div>
+            <p id="real-count" class="table-count" aria-live="polite"></p>
+            <div class="scroll real-results-table">
+                <table>
+                    <thead><tr><th>ID</th><th>Assigned task</th><th>Ours - Planning result</th><th>Ours - Execution</th><th>Video</th><th>Ours - Plan and Problem</th><th>LLM-Plan Result</th><th>LLM Plan</th></tr></thead>
+                    <tbody id="real-rows"></tbody>
+                </table>
+            </div>
+            <p class="results-footnote"><sup>†</sup> Missing look at operation required for execution.</p>
+            <noscript><p class="result-note">JavaScript is required to display the detailed trial table.</p></noscript>
+        </section>
+
+        <footer class="site-footer"><span>ICRA 2027 · Anonymous submission</span><a href="simulation-results.html">Simulation results →</a></footer>
+    </main>
+    <script src="real-world-results.js"></script>
 </body>
 </html>
